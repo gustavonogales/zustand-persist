@@ -1,0 +1,14 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "completed": false,
+      "label": "Comprar frutas"
+    },
+    {
+      "id": 2,
+      "completed": false,
+      "label": "Fazer a barba"
+    }
+  ]
+}

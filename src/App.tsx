@@ -1,25 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import { useTodos } from "./stores/todos";
+import shallow from "zustand/shallow";
 
 function App() {
+  const { todos, onToggle, lastDraft, fetch } = useTodos(
+    (state) => ({
+      todos: state.todos,
+      onToggle: state.onToggle,
+      setTodos: state.setTodos,
+      lastDraft: state.lastDraft,
+      fetch: state.fetch,
+    }),
+    shallow
+  );
+
+  useEffect(() => {
+    fetch();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main>
+      <h1>Todos</h1>
+      <span>{lastDraft}</span>
+      <ul>
+        {todos.map((todo) => (
+          <li key={todo.id}>
+            <span
+              style={{
+                textDecoration: todo.completed ? "line-through" : "inherit",
+                marginRight: "10px",
+              }}
+            >
+              {todo.label}
+            </span>
+            <button onClick={() => onToggle(todo.id)}>Complete</button>
+          </li>
+        ))}
+      </ul>
+    </main>
   );
 }
 
