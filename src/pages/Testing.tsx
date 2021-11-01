@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Checkbox,
   Divider,
   FormControlLabel,
   MenuItem,
@@ -15,16 +16,18 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RadioGroup } from "../components/RadioGroup";
 import { Select } from "../components/Select";
+import { CheckboxGroup } from "../components/CheckboxGroup";
 
 const formSchema = yup.object().shape({
   name: yup.string().required("Campo obrigatório"),
   password: yup.string().required("Senha obrigatória"),
   testRadio: yup.string().required("Selecione uma opção"),
   testSelect: yup.string().required("Selecione uma opção"),
+  testCheckbox: yup.array().of(yup.string()).min(1, "Selecione uma opção"),
 });
 
 export function Testing() {
-  const { handleSubmit, register, control, formState } = useForm({
+  const { handleSubmit, control, formState, setValue } = useForm({
     resolver: yupResolver(formSchema),
   });
   const { errors } = formState;
@@ -79,6 +82,16 @@ export function Testing() {
           <MenuItem value={20}>Twenty</MenuItem>
           <MenuItem value={30}>Thirty</MenuItem>
         </Select>
+        <CheckboxGroup
+          setValue={setValue}
+          control={control}
+          name="testCheckbox"
+          label="Opções"
+          error={errors?.testCheckbox}
+        >
+          <FormControlLabel label="teste" value="1" control={<Checkbox />} />
+          <FormControlLabel label="teste2" value="2" control={<Checkbox />} />
+        </CheckboxGroup>
         <Button type="submit">Save</Button>
       </Stack>
     </Box>
