@@ -7,7 +7,7 @@ function App() {
     (state) => ({
       todos: state.todos,
       onToggle: state.onToggle,
-      setTodos: state.setTodos,
+      // setTodos: state.setTodos,
       lastDraft: state.lastDraft,
       fetch: state.fetch,
     }),

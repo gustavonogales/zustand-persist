@@ -8,7 +8,6 @@ import { getTodos } from "../services/todos";
 type TodoStoreData = {
   todos: Todo[];
   onToggle: (id: number) => void;
-  setTodos: (todos: Todo[]) => void;
   lastDraft: string;
   fetch: () => Promise<void>;
 };
