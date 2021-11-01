@@ -3,6 +3,7 @@ import {
   Button,
   Divider,
   FormControlLabel,
+  MenuItem,
   Radio,
   Stack,
   TextField,
@@ -13,11 +14,13 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RadioGroup } from "../components/RadioGroup";
+import { Select } from "../components/Select";
 
 const formSchema = yup.object().shape({
   name: yup.string().required("Campo obrigatório"),
   password: yup.string().required("Senha obrigatória"),
   testRadio: yup.string().required("Selecione uma opção"),
+  testSelect: yup.string().required("Selecione uma opção"),
 });
 
 export function Testing() {
@@ -32,7 +35,12 @@ export function Testing() {
 
   return (
     <Box display="flex" justifyContent="center">
-      <Stack component="form" onSubmit={handleSubmit(handleSave)} width="500px">
+      <Stack
+        component="form"
+        onSubmit={handleSubmit(handleSave)}
+        width="500px"
+        gap={2}
+      >
         <Input
           name="name"
           label="Nome"
@@ -61,6 +69,16 @@ export function Testing() {
           <FormControlLabel value={1} label="Option 1" control={<Radio />} />
           <FormControlLabel value={2} label="Option 2" control={<Radio />} />
         </RadioGroup>
+        <Select
+          control={control}
+          name="testSelect"
+          label="Numeros"
+          error={errors?.testSelect}
+        >
+          <MenuItem value={10}>Ten</MenuItem>
+          <MenuItem value={20}>Twenty</MenuItem>
+          <MenuItem value={30}>Thirty</MenuItem>
+        </Select>
         <Button type="submit">Save</Button>
       </Stack>
     </Box>
