@@ -3,7 +3,12 @@ import {
   Button,
   Checkbox,
   Divider,
+  FormControl,
   FormControlLabel,
+  FormGroup,
+  FormHelperText,
+  FormLabel,
+  Grid,
   MenuItem,
   Radio,
   Stack,
@@ -11,7 +16,8 @@ import {
 } from "@mui/material";
 import React from "react";
 import { Input } from "../components/input";
-import { useForm } from "react-hook-form";
+import { Checkbox as MyCheckbox } from "../components/Checkbox";
+import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RadioGroup } from "../components/RadioGroup";
@@ -24,17 +30,33 @@ const formSchema = yup.object().shape({
   testRadio: yup.string().required("Selecione uma opção"),
   testSelect: yup.string().required("Selecione uma opção"),
   testCheckbox: yup.array().of(yup.string()).min(1, "Selecione uma opção"),
+  testCheckbox2: yup.array().of(yup.string()).min(1, "Selecione uma opção"),
 });
 
 export function Testing() {
-  const { handleSubmit, control, formState, setValue } = useForm({
-    resolver: yupResolver(formSchema),
+  const { handleSubmit, control, formState, setValue, register } = useForm({
+    // resolver: yupResolver(formSchema),
   });
   const { errors } = formState;
 
   function handleSave(data: any) {
     console.log(data);
   }
+
+  const solutions = [
+    {
+      label: "Aprimora",
+      value: "APRIMORA",
+    },
+    {
+      label: "Pense Matemática",
+      value: "PENSE_MATEMÁTICA",
+    },
+    {
+      label: "Lego Education",
+      value: "LEGO_EDUCATION",
+    },
+  ];
 
   return (
     <Box display="flex" justifyContent="center">
@@ -92,6 +114,110 @@ export function Testing() {
           <FormControlLabel label="teste" value="1" control={<Checkbox />} />
           <FormControlLabel label="teste2" value="2" control={<Checkbox />} />
         </CheckboxGroup>
+        <Controller
+          name={"testCheckbox2"}
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <FormControl component="fieldset" error={!!errors?.testCheckbox2}>
+              <FormLabel component="legend">testCheckbox2</FormLabel>
+              <FormGroup>
+                <FormControlLabel
+                  label="teste"
+                  value="1"
+                  control={<Checkbox onChange={onChange} />}
+                />
+                <FormControlLabel
+                  label="teste2"
+                  value="1"
+                  control={<Checkbox onChange={onChange} />}
+                />
+                <FormHelperText>{errors?.testCheckbox2 || ""}</FormHelperText>
+              </FormGroup>
+            </FormControl>
+          )}
+        />
+        {/* <FormControlLabel
+          value={1}
+          control={<Checkbox />}
+          label={"teste"}
+          name={`techStack[${1}]`}
+          inputRef={register}
+        /> */}
+        <FormControlLabel
+          control={
+            <Controller
+              name="options.b"
+              control={control}
+              render={(props) => (
+                <Checkbox
+                  {...props}
+                  checked={props.field.value}
+                  onChange={(e) => props.field.onChange(e.target.checked)}
+                />
+              )}
+            />
+          }
+          label={"valor1"}
+        />
+        <FormControlLabel
+          control={
+            <Controller
+              name="options.a"
+              control={control}
+              render={(props) => (
+                <Checkbox
+                  {...props}
+                  checked={props.field.value}
+                  onChange={(e) => props.field.onChange(e.target.checked)}
+                />
+              )}
+            />
+          }
+          label={"valor 2"}
+        />
+        <FormControl component="fieldset" error={!!errors?.message}>
+          <FormLabel component="legend">
+            Soluções que a escola já tem:
+          </FormLabel>
+          <Grid container>
+            {/* <Grid item xs={12} md={4}>
+              <MyCheckbox
+                control={control}
+                name="solutions[0]"
+                label="Aprimora"
+                value="APRIMORA"
+              />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <MyCheckbox
+                control={control}
+                name="solutions[1]"
+                label="Pense Matemática"
+                value="PENSE_MATEMATICA"
+              />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <MyCheckbox
+                control={control}
+                name="solutions[2]"
+                label="Lego Education"
+                value="LEGO_EDUCATION"
+              />
+            </Grid> */}
+            {solutions.map((solution, index) => (
+              <Grid item xs={4} key={solution.label}>
+                <MyCheckbox
+                  control={control}
+                  name={`solutions[${index}]`}
+                  label={solution.label}
+                  value={solution.value}
+                />
+              </Grid>
+            ))}
+          </Grid>
+          <FormHelperText>{errors?.message || ""}</FormHelperText>
+        </FormControl>
+
         <Button type="submit">Save</Button>
       </Stack>
     </Box>
