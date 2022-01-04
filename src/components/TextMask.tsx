@@ -4,10 +4,11 @@ import { IMaskInput } from "react-imask";
 interface TextMaskProps {
   onChange: (event: { target: { name: string; value: string } }) => void;
   name: string;
-  maskDefinitions: {
+  maskDefinitions?: {
     mask: string;
     definitions: object;
   };
+  maskType?: "number" | "text";
 }
 
 export const TextMask = React.forwardRef<HTMLElement, any>(function TextMask(
@@ -18,8 +19,8 @@ export const TextMask = React.forwardRef<HTMLElement, any>(function TextMask(
   return (
     <IMaskInput
       {...other}
-      mask={maskDefinitions.mask}
-      definitions={maskDefinitions.definitions}
+      mask={maskDefinitions ? maskDefinitions.mask : Number}
+      definitions={maskDefinitions ? maskDefinitions.definitions : undefined}
       inputRef={ref}
       onAccept={(value: any) =>
         onChange({ target: { name: props.name, value } })

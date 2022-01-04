@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Checkbox,
-  Divider,
   FormControl,
   FormControlLabel,
   FormGroup,
@@ -14,6 +13,7 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
+import InputMask from "react-input-mask";
 import React from "react";
 import { Input } from "../components/input";
 import { Checkbox as MyCheckbox } from "../components/Checkbox";
@@ -25,17 +25,33 @@ import { Select } from "../components/Select";
 import { CheckboxGroup } from "../components/CheckboxGroup";
 
 const formSchema = yup.object().shape({
-  name: yup.string().required("Campo obrigatório"),
-  password: yup.string().required("Senha obrigatória"),
-  testRadio: yup.string().required("Selecione uma opção"),
-  testSelect: yup.string().required("Selecione uma opção"),
-  testCheckbox: yup.array().of(yup.string()).min(1, "Selecione uma opção"),
-  testCheckbox2: yup.array().of(yup.string()).min(1, "Selecione uma opção"),
+  name: yup.string(),
+  maskText: yup.string().required("Campo obrigatório"),
+  number: yup.string(),
+  // password: yup.string().required("Senha obrigatória"),
+  // testRadio: yup.string().required("Selecione uma opção"),
+  // testSelect: yup.string().required("Selecione uma opção"),
+  // testCheckbox: yup.array().of(yup.string()).min(1, "Selecione uma opção"),
+  // testCheckbox2: yup.array().of(yup.string()).min(1, "Selecione uma opção"),
+  // solutions: yup.array().of(yup.string()),
 });
 
 export function Testing() {
-  const { handleSubmit, control, formState, setValue, register } = useForm({
-    // resolver: yupResolver(formSchema),
+  const {
+    handleSubmit,
+    control,
+    formState,
+    setValue,
+    register,
+    reset,
+    getValues,
+  } = useForm({
+    resolver: yupResolver(formSchema),
+    defaultValues: {
+      maskText: "",
+      name: "",
+      number: "",
+    },
   });
   const { errors } = formState;
 
@@ -79,6 +95,12 @@ export function Testing() {
           }}
         />
         <Input
+          name="number"
+          label="Numeros"
+          control={control}
+          error={errors?.name}
+        />
+        {/* <Input
           name="password"
           label="Senha"
           control={control}
@@ -135,7 +157,7 @@ export function Testing() {
               </FormGroup>
             </FormControl>
           )}
-        />
+        /> */}
         {/* <FormControlLabel
           value={1}
           control={<Checkbox />}
@@ -143,7 +165,7 @@ export function Testing() {
           name={`techStack[${1}]`}
           inputRef={register}
         /> */}
-        <FormControlLabel
+        {/* <FormControlLabel
           control={
             <Controller
               name="options.b"
@@ -174,13 +196,13 @@ export function Testing() {
             />
           }
           label={"valor 2"}
-        />
-        <FormControl component="fieldset" error={!!errors?.message}>
+        /> */}
+        {/* <FormControl component="fieldset" error={!!errors?.message}>
           <FormLabel component="legend">
             Soluções que a escola já tem:
           </FormLabel>
-          <Grid container>
-            {/* <Grid item xs={12} md={4}>
+          <Grid container> */}
+        {/* <Grid item xs={12} md={4}>
               <MyCheckbox
                 control={control}
                 name="solutions[0]"
@@ -204,7 +226,7 @@ export function Testing() {
                 value="LEGO_EDUCATION"
               />
             </Grid> */}
-            {solutions.map((solution, index) => (
+        {/* {solutions.map((solution, index) => (
               <Grid item xs={4} key={solution.label}>
                 <MyCheckbox
                   control={control}
@@ -216,9 +238,27 @@ export function Testing() {
             ))}
           </Grid>
           <FormHelperText>{errors?.message || ""}</FormHelperText>
-        </FormControl>
+        </FormControl> */}
 
+        <Controller
+          name="maskText"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value } }) => (
+            <InputMask
+              mask="(9) 999 999 9999"
+              onChange={onChange}
+              value={value}
+            >
+              {() => <TextField margin="normal" type="text" />}
+            </InputMask>
+          )}
+        />
         <Button type="submit">Save</Button>
+        <Button type="button" onClick={() => reset()}>
+          reset
+        </Button>
+        <Button onClick={() => console.log(getValues())}>getValues</Button>
       </Stack>
     </Box>
   );

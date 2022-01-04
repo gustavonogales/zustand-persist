@@ -9,12 +9,13 @@ import { TextMask } from "./TextMask";
 interface InputProps {
   name: string;
   label?: string;
-  control: Control;
+  control: Control<any>;
   error?: any;
   maskDefinitions?: {
     mask: string;
     definitions: object;
   };
+  maskType?: "number" | "text";
 }
 
 export function Input({
@@ -23,10 +24,18 @@ export function Input({
   label,
   error,
   maskDefinitions,
+  maskType,
   ...props
 }: InputProps) {
   const MaskComponent = React.forwardRef<HTMLElement, any>((props, ref) => {
-    return <TextMask {...props} ref={ref} maskDefinitions={maskDefinitions} />;
+    return (
+      <TextMask
+        {...props}
+        ref={ref}
+        maskDefinitions={maskDefinitions}
+        maskType={maskType}
+      />
+    );
   });
 
   return (
@@ -42,9 +51,8 @@ export function Input({
           error={!!error}
           helperText={error ? error?.message : ""}
           InputProps={{
-            inputComponent: maskDefinitions
-              ? (MaskComponent as any)
-              : undefined,
+            inputComponent:
+              maskDefinitions || maskType ? (MaskComponent as any) : undefined,
           }}
         />
       )}
